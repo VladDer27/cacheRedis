@@ -18,19 +18,10 @@ This is a CRUD application for managing books using Spring MVC, Spring Data JPA,
 - Spring MVC
 - Spring Data JPA
 - Redis
-- H2 Database (or any other database of your choice)
+- Postgres
 
 ## Prerequisites
 
 - JDK 11 or higher
 - Maven 3.6.0 or higher
-- Redis Server
-- (Optional) Docker
-
-## Getting Started
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/your-username/book-crud-redis.git
-cd book-crud-redis
+- Docker
