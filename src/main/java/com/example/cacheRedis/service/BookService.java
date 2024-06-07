@@ -25,18 +25,24 @@ public class BookService {
 
     @Cacheable(value = "books", key = "#title + #author")
     public Optional<Book> findBookByTitleAndAuthor(String title, String author) {
+        System.out.println("Выполняется запрос к БД по поиску книг по авторам и названиям");
         return bookRepository.findByTitleAndAuthor(title, author);
     }
 
     @Cacheable(value = "booksByCategory", key = "#categoryName")
     public List<Book> findBooksByCategoryName(String categoryName) {
+        System.out.println("Выполняется запрос к БД по поиску кинг по категориям");
         return bookRepository.findByCategoryName(categoryName);
     }
 
     @CacheEvict(value = {"books", "booksByCategory"}, allEntries = true)
     public Book createBook(Book book) {
         Category category = categoryRepository.findByName(book.getCategory().getName())
-                .orElse(book.getCategory());
+                .orElseGet(() -> {
+                    Category newCategory = new Category();
+                    newCategory.setName(book.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
         book.setCategory(category);
         return bookRepository.save(book);
     }
@@ -48,7 +54,11 @@ public class BookService {
         book.setTitle(bookDetails.getTitle());
         book.setAuthor(bookDetails.getAuthor());
         Category category = categoryRepository.findByName(bookDetails.getCategory().getName())
-                .orElse(bookDetails.getCategory());
+                .orElseGet(() -> {
+                    Category newCategory = new Category();
+                    newCategory.setName(bookDetails.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
         book.setCategory(category);
         return bookRepository.save(book);
     }
